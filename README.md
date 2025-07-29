@@ -17,7 +17,7 @@ Este projeto foi desenvolvido para auxiliar no cálculo dos horários de sono. E
 
 ## 🚀 Como Usar
 
-1.  Acesse a calculadora através do link: [(https://motejon.github.io/calculo-de-sono/)]
+1.  Acesse a calculadora através do link: [(https://www-user.github.io/calculo-de-sono/)]
 2.  No campo "Quero acordar às:", insira o horário desejado e os horários ideais para deitar serão exibidos automaticamente.
 3.  No campo "Quero me deitar às...", insira o horário que irá dormir e os horários ideais para acordar (incluindo cochilos) serão exibidos.
 
