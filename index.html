@@ -31,14 +31,71 @@
             box-sizing: border-box;
             flex-direction: column;
             line-height: 1.6; /* Melhorar legibilidade */
+            overflow-x: hidden; /* Evita scroll horizontal devido a elementos animados */
+            position: relative; /* Para posicionar o background animado */
         }
+
+        /* Estilo para o background animado */
+        .animated-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1; /* Fica atrás de todo o conteúdo */
+            opacity: 0.2; /* Muito sutil */
+        }
+
+        .animated-background .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, var(--primary-color), transparent);
+            opacity: 0.05; /* Menor opacidade para as ondas individuais */
+            animation: wave 10s linear infinite alternate; /* Animação suave */
+        }
+
+        .animated-background .wave:nth-child(1) {
+            height: 80%;
+            left: -20%;
+            animation-duration: 12s;
+            background: linear-gradient(to top, rgba(0, 122, 255, 0.05), transparent);
+        }
+
+        .animated-background .wave:nth-child(2) {
+            height: 90%;
+            left: -30%;
+            animation-duration: 15s;
+            background: linear-gradient(to top, rgba(0, 122, 255, 0.08), transparent);
+        }
+
+        .animated-background .wave:nth-child(3) {
+            height: 70%;
+            left: -10%;
+            animation-duration: 10s;
+            background: linear-gradient(to top, rgba(0, 122, 255, 0.03), transparent);
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(0) scaleY(1); }
+            50% { transform: translateX(10%) scaleY(1.05); }
+            100% { transform: translateX(0) scaleY(1); }
+        }
+
 
         .container {
             background-color: var(--bg-color);
             width: 100%;
-            max-width: 420px; /* Largura ligeiramente ajustada para mobile e desktop */
+            /* Ajuste para controlar a largura máxima em diferentes telas */
+            max-width: 420px; /* Largura padrão para a maioria dos dispositivos */
             padding: 15px;
             box-sizing: border-box;
+            position: relative; /* Para garantir que o conteúdo fique acima do background */
+            z-index: 1; /* Conteúdo principal acima do background */
+            padding-bottom: 50px; /* Espaço extra para o vazamento visual */
         }
 
         .text-center {
@@ -54,9 +111,37 @@
             color: var(--text-color); /* Título principal mais alinhado ao texto */
             font-size: 2.5rem; /* Tamanho maior */
             font-weight: 600; /* Semibold */
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.5rem; /* Menor margem inferior para a descrição */
             letter-spacing: -0.05em; /* Pequeno ajuste para visual 'Apple' */
+            display: flex; /* Para alinhar o ícone de info */
+            justify-content: center; /* Centraliza o texto e o ícone */
+            align-items: center; /* Alinha verticalmente o texto e o ícone */
         }
+        
+        /* Nova descrição abaixo do título com o ícone ao lado */
+        .site-description {
+            color: var(--muted-text-color);
+            font-size: 1rem;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 2rem; /* Espaço generoso antes do primeiro card */
+            padding: 0 10px; /* Pequeno padding para não colar nas bordas */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Permite que o texto quebre e o ícone fique na linha de baixo se necessário */
+        }
+        .site-description .info-icon {
+            font-size: 1rem; /* Tamanho do ícone menor, alinhado ao texto */
+            margin-left: 8px; /* Espaço entre o texto e o ícone */
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .site-description .info-icon:hover {
+            transform: scale(1.1);
+        }
+
 
         .card {
             background-color: var(--container-color);
@@ -145,7 +230,7 @@
         hr {
             border: none;
             border-top: 1px solid var(--border-color);
-            margin: 25px 0; /* Espaço generoso ao redor da linha divisória */
+            margin: 25px 0; /* Espaço generoso ao redor da linha divisoria */
         }
 
         /* Card interno de resultados */
@@ -199,6 +284,15 @@
             font-size: 0.95rem; /* Descrição menor */
             color: var(--muted-text-color);
         }
+        
+        /* Estilo para ênfase sutil dentro dos spans de resultado */
+        .result-item span em {
+            color: var(--primary-color); /* Cor primária */
+            font-style: normal; /* Remove itálico padrão do <em> */
+            font-size: 0.9em; /* Levemente menor que o texto ao redor */
+            font-weight: 600; /* Semibold */
+        }
+
 
         .text-muted {
             color: var(--muted-text-color);
@@ -255,14 +349,35 @@
 
         .sleep-tips-section li {
             position: relative;
-            padding-left: 25px; /* Espaço para o ícone */
+            padding-left: 25px; /* Espaço para o ícone checkmark */
+            padding-right: 30px; /* Espaço para o ícone "info" */
             margin-bottom: 12px;
             color: var(--text-color);
             font-size: 0.98rem;
+            cursor: pointer; /* Indica que é interativo */
+            transition: border-color 0.2s ease, background-color 0.2s ease; /* Transição para a borda e background */
+            border-bottom: 1px solid transparent; /* Borda inicial transparente */
+            padding-bottom: 5px; /* Espaço para a borda */
+            display: flex; /* Para alinhar o conteúdo e o ícone de info */
+            justify-content: space-between; /* Espalha o conteúdo e o ícone */
+            align-items: center; /* Alinha verticalmente */
+            flex-wrap: wrap; /* Permite que o texto quebre */
+        }
+        .sleep-tips-section li:hover {
+             border-bottom-color: var(--primary-color); /* Borda azul ao passar o mouse */
+             background-color: rgba(0, 122, 255, 0.05); /* Leve realce no hover */
         }
 
         .sleep-tips-section li:last-child {
             margin-bottom: 0;
+        }
+
+        /* Mantendo o negrito para os títulos das dicas */
+        .sleep-tips-section li strong {
+            font-weight: bold;
+            color: var(--text-color); /* Mantém a cor do texto principal */
+            flex-grow: 1; /* Permite que o texto ocupe o máximo de espaço */
+            margin-right: 8px; /* Adicionado um pequeno espaçamento entre strong e o resto do texto */
         }
 
         .sleep-tips-section li::before {
@@ -272,6 +387,152 @@
             position: absolute;
             left: 0;
             top: 0;
+            line-height: 1.6; /* Alinha com o texto */
+        }
+
+        /* Ícone de informação nas dicas */
+        .sleep-tips-section li .detail-icon {
+            font-size: 0.8em; /* Tamanho menor para o ícone de detalhe */
+            color: var(--muted-text-color);
+            margin-left: auto; /* Empurra para a direita */
+            cursor: pointer;
+            line-height: 1.6; /* Alinha com o texto */
+            transition: color 0.2s ease;
+        }
+        .sleep-tips-section li .detail-icon:hover {
+            color: var(--primary-color); /* Mudar cor no hover */
+        }
+
+
+        /* Estilo para o tooltip/popup de dicas */
+        .tooltip-content {
+            display: none;
+            position: absolute;
+            background-color: #333; /* Fundo escuro para o tooltip */
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            z-index: 10;
+            left: 100%; /* Aparece à direita do item da lista */
+            top: 50%;
+            transform: translateY(-50%) translateX(10px); /* Ajusta posição e adiciona espaçamento */
+            white-space: normal; /* Permite que o texto quebre linha */
+            max-width: 200px; /* Limita a largura para melhor leitura */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Sombra suave */
+            pointer-events: none; /* Não interfere com cliques no item pai */
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .sleep-tips-section li:hover .tooltip-content,
+        .sleep-tips-section li.active .tooltip-content { /* 'active' para mobile/tap */
+            display: block;
+            opacity: 1;
+            transform: translateY(-50%) translateX(0); /* Move para a posição final */
+        }
+
+        /* Seção de Fatos Curiosos/Citações */
+        .fact-section {
+            background-color: var(--container-color);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            margin-top: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--muted-text-color);
+            font-style: italic;
+            transition: transform 0.2s ease-in-out;
+        }
+        .fact-section:hover {
+            transform: translateY(-3px);
+        }
+        .fact-section p strong {
+            color: var(--primary-color);
+            font-style: normal;
+        }
+
+        /* --- Modal de Informação --- */
+        .modal {
+            display: none; /* Escondido por padrão */
+            position: fixed; /* Fica sobre tudo */
+            z-index: 200; /* Acima de tudo */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Habilita scroll se o conteúdo for muito grande */
+            background-color: rgba(0,0,0,0.6); /* Fundo semi-transparente escuro */
+            backdrop-filter: blur(5px); /* Efeito de desfoque */
+            -webkit-backdrop-filter: blur(5px);
+            display: flex; /* Usado para centralizar o conteúdo */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--container-color);
+            margin: auto;
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            width: 90%;
+            max-width: 400px; /* Largura máxima, similar aos cards */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            animation: fadeInScale 0.3s ease-out; /* Animacao de entrada */
+        }
+
+        .close-button {
+            color: var(--muted-text-color);
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--text-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-content p {
+            color: var(--text-color);
+            font-size: 1rem;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* Estilização para palavras destacadas no modal */
+        .modal-content p .highlight {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
 
@@ -285,6 +546,13 @@
             }
             h1 {
                 font-size: 2.2rem;
+            }
+            .site-description {
+                font-size: 0.9rem;
+            }
+            .site-description .info-icon {
+                font-size: 0.9rem;
+                margin-left: 5px;
             }
             .card-title {
                 font-size: 1.2rem;
@@ -316,25 +584,79 @@
             .sleep-tips-section {
                 padding: 20px;
             }
+            .sleep-tips-section li {
+                padding-right: 25px; /* Ajusta padding para o ícone menor */
+            }
+            .sleep-tips-section li .detail-icon {
+                font-size: 0.7em;
+            }
+            .tooltip-content {
+                left: 50%; /* Centra horizontalmente */
+                top: auto;
+                bottom: 110%; /* Aparece acima do item na lista */
+                transform: translateX(-50%) translateY(-10px); /* Ajusta posição para cima */
+            }
+            .sleep-tips-section li:hover .tooltip-content,
+            .sleep-tips-section li.active .tooltip-content {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+            .modal-content h2 {
+                font-size: 1.3rem;
+            }
+            .modal-content p {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Ajuste para telas muito largas (PCs) - para garantir que o container não se estique demais */
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 480px; /* Um pouco mais largo para PCs, mas ainda centralizado */
+            }
         }
     </style>
 </head>
 <body>
+    <div class="animated-background">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
     <main class="container">
         <h1 class="text-center my-4">CÁLCULO DO SONO</h1>
+        <p class="site-description">
+            Desperte com mais energia e foco. Calcule seus horários de sono ideais e alinhe-se aos ciclos naturais do seu corpo <span class="info-icon" id="info-icon">ⓘ</span>
+        </p>
 
         <div class="card">
             <h5 class="card-title">Quero acordar às:</h5>
             <input type="time" id="wake-up-time-input" value="08:00">
-            <button id="calculate-bedtime-button">CALCULAR HORA DE DEITAR</button>
+
+            <div style="margin-bottom: 20px;">
+                <label for="time-to-fall-asleep-bedtime" class="text-muted" style="display: block; text-align: center; margin-bottom: 8px;">Tempo para adormecer (min):</label>
+                <select id="time-to-fall-asleep-bedtime">
+                    <option value="5">5 minutos</option>
+                    <option value="10">10 minutos</option>
+                    <option value="15" selected>15 minutos (Padrão)</option>
+                    <option value="20">20 minutos</option>
+                    <option value="25">25 minutos</option>
+                </select>
+            </div>
+
+            <button id="calculate-bedtime-button">CALCULAR HORÁRIOS</button>
             <hr>
             <div class="result-card">
-                <div class="result-card-header">HORÁRIOS IDEAIS PARA DEITAR</div>
+                <div class="result-card-header">HORÁRIOS IDEAIS PARA SE DEITAR</div>
                 <div class="result-card-body" id="bedtime-results">
                     <p class="text-muted">Insira a hora para calcular.</p>
                 </div>
                 <p class="text-muted" style="padding: 10px; font-size: 0.8em;">
-                    *Lembre-se que o corpo de cada pessoa é único; experimente para ver qual horário funciona melhor!
+                    Lembre-se: o corpo de cada pessoa é único. Experimente para ver qual horário funciona melhor!
                 </p>
             </div>
         </div>
@@ -344,8 +666,8 @@
             <input type="time" id="bedtime-nap-input" value="22:00">
 
             <div style="margin-bottom: 20px;">
-                <label for="time-to-fall-asleep" class="text-muted" style="display: block; text-align: center; margin-bottom: 8px;">Tempo para adormecer (min):</label>
-                <select id="time-to-fall-asleep">
+                <label for="time-to-fall-asleep-wakeup" class="text-muted" style="display: block; text-align: center; margin-bottom: 8px;">Tempo para adormecer (min):</label>
+                <select id="time-to-fall-asleep-wakeup">
                     <option value="5">5 minutos</option>
                     <option value="10">10 minutos</option>
                     <option value="15" selected>15 minutos (Padrão)</option>
@@ -354,7 +676,7 @@
                 </select>
             </div>
 
-            <button id="calculate-nap-button">CALCULAR HORA DE ACORDAR</button>
+            <button id="calculate-nap-button">CALCULAR HORÁRIOS</button>
             <hr>
             <div class="result-card">
                 <div class="result-card-header">HORÁRIOS IDEAIS PARA ACORDAR</div>
@@ -362,60 +684,129 @@
                     <p class="text-muted">Insira a hora para calcular.</p>
                 </div>
                 <p class="text-muted" style="padding: 10px; font-size: 0.8em;">
-                    *Lembre-se que o corpo de cada pessoa é único; experimente para ver qual horário funciona melhor!
+                    Lembre-se: o corpo de cada pessoa é único. Experimente para ver qual horário funciona melhor!
                 </p>
             </div>
+        </div>
+
+        <div class="fact-section">
+            <p id="random-sleep-fact">Carregando um fato interessante sobre o sono...</p>
         </div>
 
         <div class="sleep-tips-section">
             <h5 class="card-title">😴 Dicas para um Sono Melhor</h5>
             <ul>
-                <li>**Consistência:** Tente manter um horário de sono e vigília regular, mesmo nos fins de semana.</li>
-                <li>**Ambiente Ideal:** Mantenha seu quarto escuro, silencioso e fresco.</li>
-                <li>**Rotina Relaxante:** Evite telas (celulares, tablets) e atividades estimulantes (exercícios intensos) antes de dormir.</li>
-                <li>**Cuidado com a Alimentação:** Evite cafeína e refeições pesadas próximo à hora de deitar.</li>
-                <li>**Individualidade:** Lembre-se que o "ciclo de sono perfeito" pode variar um pouco. Observe como você se sente!</li>
+                <li data-tooltip="Manter um horário regular ajuda a sincronizar seu ritmo circadiano, melhorando a qualidade geral do sono e a energia diurna.">
+                    <strong>Consistência</strong> Mantenha um horário de sono e vigília regular, mesmo nos fins de semana.
+                    <span class="detail-icon">...</span>
+                    <span class="tooltip-content"></span>
+                </li>
+                <li data-tooltip="Um ambiente escuro estimula a produção de melatonina. Silêncio e uma temperatura fresca (entre 18-20°C) otimizam a profundidade do sono.">
+                    <strong>Ambiente Ideal</strong> Deixe seu quarto escuro, silencioso e fresco.
+                    <span class="detail-icon">...</span>
+                    <span class="tooltip-content"></span>
+                </li>
+                <li data-tooltip="A luz azul de telas eletrônicas suprime a melatonina. Crie uma rotina relaxante, como leitura ou um banho morno, 60 minutos antes de deitar.">
+                    <strong>Rotina Relaxante</strong> Evite telas e atividades estimulantes antes de dormir.
+                    <span class="detail-icon">...</span>
+                    <span class="tooltip-content"></span>
+                </li>
+                <li data-tooltip="Cafeína e álcool podem fragmentar seu sono. Refeições pesadas antes de dormir podem causar desconforto e refluxo.">
+                    <strong>Cuidado com a Alimentação</strong> Evite cafeína e refeições pesadas próximo à hora de deitar.
+                    <span class="detail-icon">...</span>
+                    <span class="tooltip-content"></span>
+                </li>
+                <li data-tooltip="O que funciona para um, pode não funcionar para outro. Observe seus níveis de energia e humor para identificar seus ciclos de sono ideais.">
+                    <strong>Individualidade</strong> O “ciclo de sono perfeito” pode variar. Observe como você se sente!
+                    <span class="detail-icon">...</span>
+                    <span class="tooltip-content"></span>
+                </li>
             </ul>
         </div>
 
         <p class="sleep-note">
-            *Todos os cálculos são baseados em ciclos de sono de **90 minutos**, o ideal para a maioria das pessoas,
+            Todos os cálculos são baseados em ciclos de sono de <em>90 minutos</em>, o ideal para a maioria das pessoas,
             e incluem o tempo selecionado para adormecer.
         </p>
     </main>
 
-    <script>
-        // --- Constantes Baseadas na Ciência ---
-        const DURACAO_CICLO_MINUTOS = 90;
-        const DURACAO_COCHILO_CURTO_MINUTOS = 25; // Comumente sugerido para power naps
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-modal-button">&times;</span>
+            <h2>Entenda o Cálculo do Sono</h2>
+            <p>
+                Nossa calculadora de sono baseia-se na <span class="highlight">abordagem dos ciclos de sono completos de 90 minutos</span>.
+                Isso inclui todas as fases, do sono leve ao profundo e REM (Rapid Eye Movement).
+                Acordar ao final de um ciclo completo pode fazer você se sentir mais revigorado e menos grogue.
+            </p>
+            <p>
+                Os horários sugeridos são pensados para que você complete um número ideal de ciclos (entre 5 e 6 para a maioria dos adultos) antes de acordar,
+                <span class="highlight">incluindo um tempo extra para adormecer</span> (que você pode ajustar!).
+                Experimente e veja o que funciona melhor para você!
+            </p>
+        </div>
+    </div>
 
-        // --- Elementos HTML ---
+
+    <script>
+        /* --- Constantes para os Cálculos --- */
+        const DURACAO_CICLO_MINUTOS = 90;
+        const DURACAO_COCHILO_CURTO_MINUTOS = 25; /* Sugestão para power naps */
+
+        /* --- Elementos da Interface --- */
         const wakeUpTimeInput = document.getElementById("wake-up-time-input");
+        const timeToFallAsleepBedtimeSelect = document.getElementById("time-to-fall-asleep-bedtime"); 
         const calculateBedtimeButton = document.getElementById("calculate-bedtime-button");
         const bedtimeResultsDiv = document.getElementById("bedtime-results");
 
         const bedtimeNapInput = document.getElementById("bedtime-nap-input");
-        const timeToFallAsleepSelect = document.getElementById("time-to-fall-asleep"); // Novo select
+        const timeToFallAsleepWakeupSelect = document.getElementById("time-to-fall-asleep-wakeup"); 
         const calculateNapButton = document.getElementById("calculate-nap-button");
         const napResultsDiv = document.getElementById("nap-results");
 
-        // --- Funções Auxiliares ---
+        const randomSleepFactElement = document.getElementById("random-sleep-fact");
+        const sleepTipsListItems = document.querySelectorAll('.sleep-tips-section li');
+        
+        // REMOVIDO: const scrollDownArrow = document.getElementById("scroll-down-arrow");
+        const infoIcon = document.getElementById("info-icon"); /* Ícone no site-description */
+        const infoModal = document.getElementById("info-modal");
+        const closeModalButton = document.getElementById("close-modal-button");
 
-        // Formata um objeto Date para "HH:MM"
+        // REMOVIDO: Flag para controlar a seta de rolagem.
+        // REMOVIDO: let scrollArrowVisibilityControlled = false; 
+
+        /* --- Fatos Científicos e Citações (para serem exibidos aleatoriamente) --- */
+        const sleepFacts = [
+            "Um ciclo de sono completo dura em média 90 minutos e inclui todas as fases, do sono leve ao REM. Acordar ao final de um ciclo pode melhorar a sensação de bem-estar.",
+            "A exposição à luz azul de telas (celulares, tablets) à noite pode suprimir a produção de melatonina, o hormônio do sono, dificultando o adormecer.",
+            "Pesquisas do Dr. Matthew Walker (neurocientista do sono) sugerem que menos de 7 horas de sono por noite impactam negativamente o sistema imunológico e a função cognitiva.",
+            "A consistência no horário de dormir e acordar, mesmo nos fins de semana, ajuda a regular o relógio biológico interno (ritmo circadiano).",
+            "A qualidade do sono é tão crucial quanto a quantidade. Não basta dormir muito, é preciso dormir bem.",
+            "Um cochilo revigorante de 20-30 minutos pode melhorar o estado de alerta e o desempenho cognitivo sem causar inércia do sono.",
+            "O sono REM (Rapid Eye Movement) é vital para o processamento de emoções, consolidação da memória e aprendizado.",
+            "A privação de sono pode levar ao aumento do apetite e ganho de peso, afetando hormônios que regulam a fome e a saciedade.",
+            "Manter o quarto escuro, silencioso e fresco (entre 18-20°C) cria o ambiente ideal para um sono reparador.",
+            "O sono é uma das colunas da saúde, junto com dieta e exercício. Negligenciá-lo afeta todas as outras áreas da vida."
+        ];
+
+
+        /* --- Funções Auxiliares de Horário --- */
+
+        /* Converte um objeto Date para o formato "HH:MM" */
         function formatTime(date) {
             const hours = String(date.getHours()).padStart(2, '0');
             const minutes = String(date.getMinutes()).padStart(2, '0');
             return `${hours}:${minutes}`;
         }
 
-        // Adiciona/subtrai minutos a um horário
+        /* Adiciona ou subtrai minutos de um objeto Date */
         function addMinutes(date, minutes) {
             return new Date(date.getTime() + minutes * 60000);
         }
 
-        // --- Lógica de Cálculo ---
+        /* --- Lógica de Cálculo de Horários --- */
 
-        // Função para "Calcular Hora de Deitar"
+        /* Função para calcular os melhores horários para deitar */
         function updateBedtimes() {
             const wakeUpTimeStr = wakeUpTimeInput.value;
             if (!wakeUpTimeStr) {
@@ -431,13 +822,14 @@
 
                 const [hours, minutes] = wakeUpTimeStr.split(':').map(Number);
                 const now = new Date();
-                const tempoParaAdormecer = parseInt(timeToFallAsleepSelect.value);
+                const tempoParaAdormecer = parseInt(timeToFallAsleepBedtimeSelect.value);
 
                 let wakeUpDtCandidate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0, 0);
 
                 let wakeUpDt;
+                /* Se a hora de acordar já passou para hoje, calcula para o próximo dia */
                 if (wakeUpDtCandidate < now) {
-                    wakeUpDt = addMinutes(wakeUpDtCandidate, 24 * 60); // Próximo dia
+                    wakeUpDt = addMinutes(wakeUpDtCandidate, 24 * 60);
                 } else {
                     wakeUpDt = wakeUpDtCandidate;
                 }
@@ -445,12 +837,12 @@
                 let resultsHtml = '';
                 let foundResults = false;
 
-                // Calcula para 6, 5, 4, 3, 2 ciclos de sono
+                /* Gera sugestões para 6, 5, 4, 3 e 2 ciclos de sono (ordem decrescente) */
                 for (let i = 6; i >= 2; i--) {
                     const sleepDuration = i * DURACAO_CICLO_MINUTOS + tempoParaAdormecer;
                     const bedtimeDt = addMinutes(wakeUpDt, -sleepDuration);
 
-                    // Evita sugerir horários de deitar que já passaram no dia atual
+                    /* Evita sugerir horários de deitar que já aconteceram se o despertar for no mesmo dia */
                     const isTodayWakeUp = wakeUpDt.getDate() === now.getDate() && wakeUpDt.getMonth() === now.getMonth() && wakeUpDt.getFullYear() === now.getFullYear();
                     const isTodayBedtime = bedtimeDt.getDate() === now.getDate() && bedtimeDt.getMonth() === now.getMonth() && bedtimeDt.getFullYear() === now.getFullYear();
 
@@ -460,32 +852,49 @@
 
                     const hoursOfSleep = (i * DURACAO_CICLO_MINUTOS) / 60;
                     
-                    // Calculando a faixa de 10 minutos
+                    /* Define uma janela de 10 minutos para deitar */
                     const bedtimeStart = addMinutes(bedtimeDt, -5);
                     const bedtimeEnd = addMinutes(bedtimeDt, 5);
 
+                    // CORREÇÃO GRAMATICAL: "1 ciclo" vs "X ciclos"
+                    const ciclosText = (i === 1) ? '1 ciclo' : `${i} ciclos`;
+
                     resultsHtml += `
                         <div class="result-item">
-                            <strong>Entre ${formatTime(bedtimeStart)} e ${formatTime(bedtimeEnd)} </strong>
-                            <span>para ${i} ciclos (~${hoursOfSleep.toFixed(1)}h de sono)</span>
+                            <strong>Entre ${formatTime(bedtimeStart)} e ${formatTime(bedtimeEnd)}</strong>
+                            <span>para ${ciclosText} (~${hoursOfSleep.toFixed(1)}h de sono)</span>
                         </div>
                     `;
                     foundResults = true;
                 }
 
+                /* Adiciona o cochilo por último na seção de deitar */
+                const napBedtimeDt = addMinutes(wakeUpDt, -(DURACAO_COCHILO_CURTO_MINUTOS + tempoParaAdormecer));
+                const isTodayWakeUp = wakeUpDt.getDate() === now.getDate() && wakeUpDt.getMonth() === now.getMonth() && wakeUpDt.getFullYear() === now.getFullYear();
+                if (!(isTodayWakeUp && napBedtimeDt < now)) {
+                     resultsHtml += `
+                        <div class="result-item">
+                            <strong>Entre ${formatTime(addMinutes(napBedtimeDt, -5))} e ${formatTime(addMinutes(napBedtimeDt, 5))}</strong>
+                            <span>para iniciar um <em>Cochilo Curto</em> (~${DURACAO_COCHILO_CURTO_MINUTOS} min de sono).</span>
+                        </div>
+                    `;
+                    foundResults = true;
+                }
+
+
                 if (!foundResults) {
-                    bedtimeResultsDiv.innerHTML = '<p class="text-warning">Nenhum horário ideal futuro encontrado para deitar. Verifique a hora de acordar.</p>';
+                    bedtimeResultsDiv.innerHTML = '<p class="text-warning">Não foi possível encontrar horários futuros para se deitar. Verifique a hora de acordar.</p>';
                 } else {
                     bedtimeResultsDiv.innerHTML = resultsHtml;
                 }
 
             } catch (e) {
-                bedtimeResultsDiv.innerHTML = `<p class="text-danger">Erro ao calcular: ${e.message}. Verifique o formato da hora.</p>`;
+                bedtimeResultsDiv.innerHTML = `<p class="text-danger">Erro ao calcular: ${e.message}. Por favor, verifique o formato da hora.</p>`;
                 console.error("Erro na função updateBedtimes:", e);
             }
         }
 
-        // Função para "Calcular Hora de Acordar" (Cochilo e 1 Ciclo Completo)
+        /* Função para calcular os melhores horários para acordar (incluindo cochilo) */
         function updateNapTimes() {
             const bedtimeNapStr = bedtimeNapInput.value;
             if (!bedtimeNapStr) {
@@ -501,53 +910,132 @@
 
                 const [hours, minutes] = bedtimeNapStr.split(':').map(Number);
                 const now = new Date();
-                const tempoParaAdormecer = parseInt(timeToFallAsleepSelect.value);
+                const tempoParaAdormecer = parseInt(timeToFallAsleepWakeupSelect.value);
 
 
                 let bedtimeNapDt = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0, 0);
 
-                // Se o horário de deitar já passou, assume que é para o próximo dia
+                /* Se o horário de deitar já passou, assume que é para o próximo dia */
                 if (bedtimeNapDt < now) {
                    bedtimeNapDt = addMinutes(bedtimeNapDt, 24 * 60);
                 }
 
                 let resultsHtml = '';
 
-                // Power Nap
+                /* Sugestão para um Cochilo Revigorante (primeiro na lista) */
                 const powerNapWakeTimeCenter = addMinutes(bedtimeNapDt, (DURACAO_COCHILO_CURTO_MINUTOS + tempoParaAdormecer));
                 const powerNapWakeTimeStart = addMinutes(powerNapWakeTimeCenter, -5);
                 const powerNapWakeTimeEnd = addMinutes(powerNapWakeTimeCenter, 5);
                 resultsHtml += `
                     <div class="result-item">
-                        <strong>Entre ${formatTime(powerNapWakeTimeStart)} e ${formatTime(powerNapWakeTimeEnd)} </strong>
-                        <span>para um **Cochilo Revigorante** (~${DURACAO_COCHILO_CURTO_MINUTOS} min de sono).</span>
+                        <strong>Entre ${formatTime(powerNapWakeTimeStart)} e ${formatTime(powerNapWakeTimeEnd)}</strong>
+                        <span>para um <em>Cochilo Revigorante</em> (~${DURACAO_COCHILO_CURTO_MINUTOS} min de sono).</span>
                     </div>
                 `;
 
-                // 1 Ciclo Completo
-                const fullCycleWakeTimeCenter = addMinutes(bedtimeNapDt, (DURACAO_CICLO_MINUTOS + tempoParaAdormecer));
-                const fullCycleWakeTimeStart = addMinutes(fullCycleWakeTimeCenter, -5);
-                const fullCycleWakeTimeEnd = addMinutes(fullCycleWakeTimeCenter, 5);
-                resultsHtml += `
-                    <div class="result-item">
-                        <strong>Entre ${formatTime(fullCycleWakeTimeStart)} e ${formatTime(fullCycleWakeTimeEnd)} </strong>
-                        <span>para **1 Ciclo de Sono Completo** (~${DURACAO_CICLO_MINUTOS} min de sono).</span>
-                    </div>
-                `;
+                /* Adiciona sugestões para 1 a 6 ciclos de sono completos (em ordem crescente) */
+                for (let i = 1; i <= 6; i++) {
+                    const sleepDuration = i * DURACAO_CICLO_MINUTOS + tempoParaAdormecer;
+                    const wakeUpTimeCenter = addMinutes(bedtimeNapDt, sleepDuration);
+                    const wakeUpTimeStart = addMinutes(wakeUpTimeCenter, -5);
+                    const wakeUpTimeEnd = addMinutes(wakeUpTimeCenter, 5);
+
+                    const hoursOfSleep = (i * DURACAO_CICLO_MINUTOS) / 60;
+
+                    // CORREÇÃO GRAMATICAL: "1 ciclo" vs "X ciclos"
+                    const ciclosText = (i === 1) ? '1 ciclo' : `${i} ciclos`;
+
+                    resultsHtml += `
+                        <div class="result-item">
+                            <strong>Entre ${formatTime(wakeUpTimeStart)} e ${formatTime(wakeUpTimeEnd)}</strong>
+                            <span>para ${ciclosText} (~${hoursOfSleep.toFixed(1)}h de sono).</span>
+                        </div>
+                    `;
+                }
                 
                 napResultsDiv.innerHTML = resultsHtml;
 
             } catch (e) {
-                napResultsDiv.innerHTML = `<p class="text-danger">Erro ao calcular: ${e.message}. Verifique o formato da hora.</p>`;
+                napResultsDiv.innerHTML = `<p class="text-danger">Erro ao calcular: ${e.message}. Por favor, verifique o formato da hora.</p>`;
                 console.error("Erro na função updateNapTimes:", e);
             }
         }
 
-        // --- Event Listeners (acionam os cálculos) ---
+        /* --- Funções de Conteúdo Dinâmico e Interatividade --- */
+
+        /* Exibe um fato/citação aleatório sobre o sono */
+        function displayRandomSleepFact() {
+            const randomIndex = Math.floor(Math.random() * sleepFacts.length);
+            randomSleepFactElement.textContent = sleepFacts[randomIndex];
+        }
+
+        /* Inicializa tooltips para as dicas de sono */
+        function initializeTooltips() {
+            sleepTipsListItems.forEach(item => {
+                const tooltipText = item.getAttribute('data-tooltip');
+                const tooltipContentSpan = item.querySelector('.tooltip-content');
+                if (tooltipText && tooltipContentSpan) {
+                    tooltipContentSpan.textContent = tooltipText;
+
+                    /* Para dispositivos móveis (tap) */
+                    item.addEventListener('click', function(event) {
+                        /* Evita que o clique se propague e feche outros tooltips */
+                        event.stopPropagation(); 
+
+                        /* Remove 'active' de outros itens */
+                        sleepTipsListItems.forEach(otherItem => {
+                            if (otherItem !== this) {
+                                otherItem.classList.remove('active');
+                            }
+                        });
+                        this.classList.toggle('active'); /* Alterna 'active' no item clicado */
+                    });
+                }
+            });
+
+            /* Oculta tooltips ao clicar fora em mobile */
+            document.addEventListener('click', (event) => {
+                if (!event.target.closest('.sleep-tips-section li')) { /* Verifica se o clique não foi em um item de dica */
+                    sleepTipsListItems.forEach(item => {
+                        item.classList.remove('active');
+                    });
+                }
+            });
+        }
+
+        /* --- Lógica do Modal de Informação --- */
+        // REMOVIDO: const hasVisitedBeforeKey = 'hasVisitedSleepCalculator'; // Chave para o LocalStorage
+
+        function showInfoModalFirstTime() {
+            // REMOVIDO: Lógica de localStorage. O modal agora sempre aparece no carregamento.
+            infoModal.style.display = 'flex'; // Exibe o modal
+        }
+
+        function hideInfoModal() {
+            infoModal.style.display = 'none'; // Esconde o modal
+        }
+
+        // Event listener para o ícone de informação (sempre mostra ao clicar)
+        infoIcon.addEventListener('click', () => {
+            infoModal.style.display = 'flex'; 
+        });
+
+        // Event listener para o botão de fechar o modal
+        closeModalButton.addEventListener('click', hideInfoModal);
+
+        // Fecha o modal se clicar fora do conteúdo do modal
+        window.addEventListener('click', (event) => {
+            if (event.target == infoModal) {
+                hideInfoModal();
+            }
+        });
+
+
+        /* --- Conectando Ações aos Botões e Inputs --- */
         calculateBedtimeButton.addEventListener('click', updateBedtimes);
         calculateNapButton.addEventListener('click', updateNapTimes);
 
-        // Opcional: Adicionar "Enter" para calcular nos campos de input
+        /* Permite calcular pressionando "Enter" nos campos de hora */
         wakeUpTimeInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 updateBedtimes();
@@ -558,14 +1046,31 @@
                 updateNapTimes();
             }
         });
-        // Aciona o cálculo ao mudar o tempo de adormecer
-        timeToFallAsleepSelect.addEventListener('change', () => {
-            if (bedtimeNapInput.value) { // Só recalcula se já houver um valor no input
+
+        /* Recalcula ao mudar o tempo de adormecer, se já houver horas nos campos */
+        timeToFallAsleepBedtimeSelect.addEventListener('change', () => {
+            if (wakeUpTimeInput.value) { 
+                updateBedtimes();
+            }
+        });
+        timeToFallAsleepWakeupSelect.addEventListener('change', () => {
+            if (bedtimeNapInput.value) { 
                 updateNapTimes();
             }
-            if (wakeUpTimeInput.value) { // Recalcula o horário de deitar também, se houver valor
-                 updateBedtimes();
-            }
+        });
+
+        /* --- Inicialização ao Carregar a Página --- */
+        document.addEventListener('DOMContentLoaded', () => {
+            // Garante que a página inicie no topo
+            window.scrollTo(0, 0); 
+
+            displayRandomSleepFact(); /* Exibe um fato ao carregar */
+            initializeTooltips(); /* Inicializa a interatividade das dicas */
+            
+            // O modal agora sempre aparecerá no carregamento
+            showInfoModalFirstTime();
+
+            // REMOVIDO: Toda a lógica da seta de rolagem.
         });
     </script>
 </body>
